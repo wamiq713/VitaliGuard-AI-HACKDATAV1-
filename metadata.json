@@ -1,0 +1,13 @@
+{
+  "name": "VitaliGuard AI",
+  "description": "Smart Health Companion providing AI-powered preventive care, health tracking, and risk prediction.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "AI Health Insights",
+    "Real-time Tracking",
+    "Symptom Chatbot"
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Stores user physical details and goals.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "age": { "type": "number" },
+        "gender": { "type": "string", "enum": ["male", "female", "other"] },
+        "height": { "type": "number", "description": "Height in cm" },
+        "weight": { "type": "number", "description": "Weight in kg" },
+        "goals": { "type": "array", "items": { "type": "string" } },
+        "dailyWaterGoal": { "type": "number" },
+        "reminders": { 
+          "type": "array", 
+          "items": { "$ref": "#/entities/GoalReminder" } 
+        },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "email"]
+    },
+    "GoalReminder": {
+      "title": "Goal Reminder",
+      "description": "Configuration for a goal reminder.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "goal": { "type": "string" },
+        "time": { "type": "string", "pattern": "^([01]\\d|2[0-3]):([0-5]\\d)$" },
+        "frequency": { "type": "string", "enum": ["daily", "weekly", "weekdays"] }
+      },
+      "required": ["id", "goal", "time", "frequency"]
+    },
+    "HealthLog": {
+      "title": "Health Log",
+      "description": "Daily recording of health metrics.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "steps": { "type": "integer" },
+        "sleepHours": { "type": "number" },
+        "waterIntake": { "type": "number", "description": "In liters" },
+        "caloriesConsumed": { "type": "integer" },
+        "bloodPressureSystolic": { "type": "number" },
+        "bloodPressureDiastolic": { "type": "number" },
+        "mood": { "type": "string" },
+        "bmi": { "type": "number" },
+        "recordedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "date"]
+    },
+    "HealthRisk": {
+      "title": "Health Risk Prediction",
+      "description": "AI predicted risk levels for various conditions.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "diabetesRisk": { "type": "string", "enum": ["low", "medium", "high"] },
+        "hypertensionRisk": { "type": "string", "enum": ["low", "medium", "high"] },
+        "stressRisk": { "type": "string", "enum": ["low", "medium", "high"] },
+        "recommendations": { "type": "array", "items": { "type": "string" } },
+        "calculatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "calculatedAt"]
+    },
+    "ChatMessage": {
+      "title": "Chat Message",
+      "description": "A message in the health chatbot history.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "model"] },
+        "content": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "role", "content", "timestamp"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "Main user document"
+    },
+    "users/{userId}/logs/{logId}": {
+      "schema": "HealthLog",
+      "description": "Historical health logs for a user"
+    },
+    "users/{userId}/risks/{riskId}": {
+      "schema": "HealthRisk",
+      "description": "AI risk prediction reports"
+    },
+    "users/{userId}/chat/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Chat history with VitaliGuard Assistant"
+    }
+  }
+}
